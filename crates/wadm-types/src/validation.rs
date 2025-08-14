@@ -689,6 +689,7 @@ pub fn validate_component_properties(application: &Manifest) -> Vec<ValidationFa
                 }
                 _ => {}
             },
+            Properties::Extension { .. } => {}
         }
     }
     failures

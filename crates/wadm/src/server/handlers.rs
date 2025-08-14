@@ -15,7 +15,7 @@ use wadm_types::{
     },
     CapabilityProperties, Manifest, Properties,
 };
-use wadm_types::{ComponentProperties, LATEST_VERSION};
+use wadm_types::{ComponentProperties, ExtensionProperties, LATEST_VERSION};
 
 use crate::{model::StoredManifest, publisher::Publisher};
 
@@ -677,6 +677,9 @@ impl<P: Publisher> Handler<P> {
                             }
                             | Properties::Component {
                                 properties: ComponentProperties { id, .. },
+                            }
+                            | Properties::Extension {
+                                properties: ExtensionProperties { id, .. },
                             }) = &component.properties;
 
                             if let Some(id) = id.as_ref() {
@@ -696,6 +699,9 @@ impl<P: Publisher> Handler<P> {
             }
             | Properties::Component {
                 properties: ComponentProperties { id, .. },
+            }
+            | Properties::Extension {
+                properties: ExtensionProperties { id, .. },
             }) = &component.properties;
 
             if let Some(id) = id.as_ref() {

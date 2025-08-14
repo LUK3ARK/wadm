@@ -140,6 +140,7 @@ where
                     snapshot_data,
                 )
             }
+            Properties::Extension { .. } => {}
         });
     scalers
 }

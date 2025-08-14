@@ -255,6 +255,8 @@ impl Component {
                 secrets.extend(properties.secrets.clone());
             }
             Properties::Capability { properties } => secrets.extend(properties.secrets.clone()),
+            // todo - fix when adding secret support
+            Properties::Extension { .. } => {}
         };
         secrets
     }
@@ -273,6 +275,8 @@ pub enum Properties {
     Component { properties: ComponentProperties },
     #[serde(rename = "capability")]
     Capability { properties: CapabilityProperties },
+    #[serde(rename = "extension")]
+    Extension { properties: ExtensionProperties },
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq, Eq, ToSchema, JsonSchema)]
@@ -356,6 +360,24 @@ pub struct CapabilityProperties {
     /// these values at runtime using `wasmcloud:secrets/store`.
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub secrets: Vec<SecretProperty>,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone, PartialEq, Eq, ToSchema, JsonSchema)]
+#[serde(deny_unknown_fields)]
+pub struct ExtensionProperties {
+    /// The component ID to use for this extension. If not supplied, it will be generated
+    /// as a combination of the [Metadata::name] and the image reference.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    /// Named configuration to pass to the extension. The merged set of configuration will be passed
+    /// to the extension at runtime.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub config: Vec<ConfigProperty>,
+    // Named secret references to pass to the extension. The extension will be able to retrieve
+    // these values at runtime using `wasmcloud:secrets/store`.
+    // TODO!
+    // #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    // pub secrets: Vec<SecretProperty>,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq, Eq, ToSchema, JsonSchema)]
